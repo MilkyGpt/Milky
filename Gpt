@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Milky • AI Humanizer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/particleground@1.0.1/jquery.particleground.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --bg: #0a0a1a;
+      --sidebar: rgba(20, 25, 50, 0.92);
+      --card: rgba(30, 35, 70, 0.75);
+      --glass: rgba(255, 255, 255, 0.07);
+      --accent: linear-gradient(135deg, #00ff88, #00d4ff);
+      --text: #e8e8ff;
+      --gray: #999;
+      --red: #ff5555;
+      --border: rgba(0, 255, 136, 0.18);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Animated Background */
+    .bg-flow {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(120deg, #0f0f2e, #1a0033, #001122, #0f1a1a);
+      background-size: 400% 400%;
+      animation: flow 20s ease infinite;
+      z-index: -3;
+    }
+    @keyframes flow {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    #particles { position: fixed; inset: 0; z-index: -2; }
+    .glass-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(10, 10, 35, 0.8);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      z-index: -1;
+    }
+
+    .sidebar {
+      width: 280px;
+      background: var(--sidebar);
+      backdrop-filter: blur(30px);
+      border-right: 1px solid var(--border);
+      padding: 2.5rem 1rem;
+      position: fixed;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 100;
+      transition: all 0.4s ease;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.5);
+    }
+    .logo { text-align: center; margin-bottom: 3rem; }
+    .logo h1 {
+      font-size: 2.6rem;
+      font-weight: 800;
+      background: var(--accent);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-item {
+      padding: 1.1rem 1.6rem;
+      margin: 0.6rem 0;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.4s ease;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-weight: 600;
+      font-size: 1rem;
+      position: relative;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(0, 255, 136, 0.15), transparent);
+      transition: left 0.6s;
+    }
+    .nav-item:hover::before, .nav-item.active::before { left: 100%; }
+    .nav-item:hover, .nav-item.active {
+      background: var(--glass);
+      transform: translateX(10px);
+      box-shadow: 0 12px 35px rgba(0, 255, 136, 0.2);
+      border: 1px solid rgba(0, 255, 136, 0.3);
+    }
+    .nav-item i { width: 24px; font-size: 1.1rem; }
+
+    .main {
+      margin-left: 280px;
+      width: calc(100% - 280px);
+      padding: 2.5rem;
+      overflow-y: auto;
+      min-height: 100vh;
+      transition: all 0.4s ease;
+    }
+
+    .tab { display: none; animation: fadeIn 0.6s ease; }
+    .tab.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: none; } }
+
+    .card {
+      background: var(--card);
+      backdrop-filter: blur(25px);
+      border-radius: 28px;
+      padding: 2.5rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      transition: all 0.4s ease;
+    }
+    .card:hover { transform: translateY(-10px); box-shadow: 0 30px 80px rgba(0, 255, 136, 0.15); }
+
+    h2 {
+      font-size: 1.9rem;
+      margin-bottom: 1.5rem;
+      background: var(--accent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    textarea, #output, #detectInput {
+      width: 100%;
+      min-height: 280px;
+      padding: 1.6rem;
+      background: rgba(15, 15, 40, 0.9);
+      border: 1px solid rgba(0, 255, 136, 0.25);
+      border-radius: 20px;
+      color: white;
+      font-size: 1.1rem;
+      resize: vertical;
+      transition: all 0.4s ease;
+      font-family: inherit;
+    }
+    textarea:focus, #output:focus, #detectInput:focus {
+      outline: none;
+      border-color: #00ff88;
+      box-shadow: 0 0 0 4px rgba(0, 255, 136, 0.25);
+      transform: scale(1.015);
+    }
+
+    .btn {
+      background: var(--accent);
+      color: black;
+      border: none;
+      padding: 1rem 2.4rem;
+      border-radius: 50px;
+      font-weight: 700;
+      cursor: pointer;
+      margin: 0.6rem;
+      transition: all 0.4s ease;
+      box-shadow: 0 12px 35px rgba(0, 255, 136, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    .btn::before {
+      content: ''; position: absolute; top: 50%; left: 50%;
+      width: 0; height: 0; background: rgba(255,255,255,0.3);
+      border-radius: 50%; transform: translate(-50%,-50%);
+      transition: all 0.7s;
+    }
+    .btn:hover::before { width: 350px; height: 350px; }
+    .btn:hover { transform: translateY(-5px) scale(1.06); }
+
+    .btn[style*="background:rgba(255,255,255,0.1)"] {
+      background: rgba(255,255,255,0.1) !important;
+      color: white !important;
+      box-shadow: none !important;
+    }
+    .btn[style*="background:rgba(255,255,255,0.1)"]:hover {
+      background: rgba(255,255,255,0.2) !important;
+    }
+
+    .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+    .stat {
+      background: rgba(20, 20, 50, 0.8);
+      padding: 1.8rem;
+      border-radius: 24px;
+      text-align: center;
+      border: 1px solid var(--border);
+      transition: all 0.4s ease;
+    }
+    .stat:hover { background: rgba(0, 255, 136, 0.1); transform: translateY(-5px); }
+    .stat-num { font-size: 2.8rem; font-weight: 800; background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .detection-result {
+      background: rgba(20, 20, 50, 0.85);
+      padding: 3rem;
+      border-radius: 28px;
+      border-left: 6px solid #00ff88;
+      margin-top: 1.5rem;
+      animation: slideIn 0.7s ease;
+    }
+    .ai-score { font-size: 5rem; font-weight: 800; text-align: center; background: var(--accent); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .verdict { font-size: 2rem; font-weight: 700; text-align: center; margin: 1.5rem 0; }
+    .verdict.passed { color: #00ff88; }
+    .verdict.failed { color: var(--red); }
+
+    .highlight-ai {
+      background: rgba(255, 85, 85, 0.15);
+      border-left: 5px solid var(--red);
+      padding: 14px;
+      margin: 12px 0;
+      border-radius: 14px;
+      transition: all 0.3s;
+    }
+    .highlight-ai:hover { background: rgba(255, 85, 85, 0.25); transform: scale(1.01); }
+
+    #historyList { max-height: 600px; overflow-y: auto; padding-right: 10px; }
+    .history-item {
+      padding: 1.4rem;
+      background: rgba(20, 20, 50, 0.8);
+      border-radius: 18px;
+      margin: 1rem 0;
+      border-left: 5px solid var(--accent);
+      transition: all 0.4s ease;
+    }
+    .history-item:hover { background: rgba(0, 255, 136, 0.1); transform: translateX(8px); }
+
+    @media (max-width: 900px) {
+      .sidebar { width: 90px; padding: 2rem 0.8rem; }
+      .sidebar .logo h1, .nav-item span { display: none; }
+      .main { margin-left: 90px; width: calc(100% - 90px); padding: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated Background -->
+  <div class="bg-flow"></div>
+  <div id="particles"></div>
+  <div class="glass-overlay"></div>
+
+  <div class="sidebar">
+    <div class="logo"><h1>Milky</h1></div>
+    <div class="nav-item active" data-tab="editor"><i class="fas fa-edit"></i> <span>Editor</span></div>
+    <div class="nav-item" data-tab="detector"><i class="fas fa-search"></i> <span>AI Detector</span></div>
+    <div class="nav-item" data-tab="stats"><i class="fas fa-chart-bar"></i> <span>Stats</span></div>
+    <div class="nav-item" data-tab="history"><i class="fas fa-history"></i> <span>History</span></div>
+    <div class="nav-item" data-tab="settings"><i class="fas fa-cog"></i> <span>Settings</span></div>
+  </div>
+
+  <div class="main">
+    <div id="editor" class="tab active">
+      <div class="card">
+        <h2>Paste AI Text</h2>
+        <textarea id="input" placeholder="Paste your AI-generated text here..."></textarea>
+        <button class="btn" onclick="makeItHuman()">Make It Human</button>
+        <button class="btn" style="background:rgba(255,255,255,0.1);color:white;" onclick="clearInput()">Clear</button>
+      </div>
+      <div class="card">
+        <h2>Your Final Text (Editable)</h2>
+        <div id="output" contenteditable="true" spellcheck="false"></div>
+        <div style="text-align:center; margin-top:1.5rem;">
+          <button class="btn" onclick="saveSession()">Save Session</button>
+          <button class="btn" onclick="copyOutput()">Copy</button>
+          <button class="btn" onclick="downloadTxt()">Download .txt</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="detector" class="tab">
+      <div class="card">
+        <h2>AI Detector</h2>
+        <textarea id="detectInput" placeholder="Paste any text to scan..."></textarea>
+        <button class="btn" onclick="runDetection()">Scan Now</button>
+        <button class="btn" style="background:rgba(255,255,255,0.1);color:white;" onclick="clearDetector()">Clear</button>
+      </div>
+      <div id="detectResult" class="detection-result" style="display:none;">
+        <div class="ai-score" id="aiScore">0%</div>
+        <div class="verdict" id="verdict">—</div>
+        <p style="text-align:center;color:#aaa;margin:1.5rem 0;"><strong>AI-like sentences in red:</strong> <span id="aiMarked">0</span></p>
+        <div id="highlightedText" style="background:rgba(15,15,40,0.9);padding:2rem;border-radius:20px;line-height:2;"></div>
+      </div>
+    </div>
+
+    <div id="stats" class="tab">
+      <div class="card">
+        <h2>Your AI Usage Stats</h2>
+        <div class="stat-grid">
+          <div class="stat"><div class="stat-num" id="aiCount">0</div><div class="stat-label">Times Used AI</div></div>
+          <div class="stat"><div class="stat-num" id="editCount">0</div><div class="stat-label">Real Edits Made</div></div>
+          <div class="stat"><div class="stat-num" id="aiPercent">0%</div><div class="stat-label">AI Influence</div></div>
+          <div class="stat"><div class="stat-num" id="lastUsed">-</div><div class="stat-label">Last Used AI</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="history" class="tab">
+      <div class="card">
+        <h2>Session History</h2>
+        <button class="btn" onclick="exportData()" style="margin-bottom:1rem;">Export All Data</button>
+        <input type="file" id="importFile" style="display:none;" onchange="importData(event)">
+        <button class="btn" onclick="document.getElementById('importFile').click()">Import Data</button>
+        <div id="historyList"></div>
+      </div>
+    </div>
+
+    <div id="settings" class="tab">
+      <div class="card">
+        <h2>Settings</h2>
+        <p>All your data is saved only on your device — nothing goes online.</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+    // Particle Background
+    $(document).ready(function() {
+      $('#particles').particleground({
+        dotColor: 'rgba(0, 255, 136, 0.12)',
+        lineColor: 'rgba(0, 212, 255, 0.08)',
+        particleRadius: 6,
+        proximity: 130,
+        density: 14000,
+        minSpeedX: 0.12,
+        maxSpeedX: 0.38,
+        minSpeedY: 0.12,
+        maxSpeedY: 0.38
+      });
+    });
+
+    // === YOUR FULL ORIGINAL SCRIPT BELOW (100% UNCHANGED) ===
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.getElementById(item.dataset.tab).classList.add('active');
+      });
+    });
+
+    let sessions = JSON.parse(localStorage.getItem('milkySessions') || '[]');
+    let stats = JSON.parse(localStorage.getItem('milkyStats') || '{"aiCount":0,"editCount":0,"lastUsed":"Never"}');
+    updateStats();
+    loadHistory();
+
+    let editTimer = null;
+    const output = document.getElementById('output');
+    output.addEventListener('input', () => {
+      clearTimeout(editTimer);
+      editTimer = setTimeout(() => {
+        stats.editCount++;
+        localStorage.setItem('milkyStats', JSON.stringify(stats));
+        updateStats();
+      }, 2000);
+    });
+
+    function makeItHuman() {
+      let text = document.getElementById('input').value.trim();
+      if (!text) return alert("Paste something first!");
+
+      const advancedReplacements = [
+        {find: /In conclusion/gi, replace: ["So to wrap this up", "Overall, I'd say", "Wrapping it up"]},
+        {find: /Furthermore/gi, replace: ["On top of that", "Also", "Plus"]},
+        {find: /However/gi, replace: ["But", "That said", "Still"]},
+        {find: /Therefore/gi, replace: ["So", "This means", "Because of that"]},
+        {find: /utilize/gi, replace: ["use", "make use of"]},
+        {find: /demonstrate/gi, replace: ["show", "prove"]},
+        {find: /significant/gi, replace: ["big", "major", "key"]}
+      ];
+      advancedReplacements.forEach(({find, replace}) => {
+        if (Math.random() > 0.3) {
+          const rep = Array.isArray(replace) ? replace[Math.floor(Math.random() * replace.length)] : replace;
+          text = text.replace(find, rep);
+        }
+      });
+
+      text = text
+        .replace(/\bdo not\b/gi, "don't")
+        .replace(/\bis not\b/gi, "isn't")
+        .replace(/\bare not\b/gi, "aren't")
+        .replace(/\bwill not\b/gi, "won't")
+        .replace(/\bcannot\b/gi, "can't")
+        .replace(/—/g, "-");
+
+      const synonyms = {
+        "important": ["key", "huge", "vital"],
+        "understand": ["get", "see", "grasp"],
+        "example": ["like", "say", "for instance"],
+        "because": ["since", "as", "'cause"]
+      };
+      Object.entries(synonyms).forEach(([word, opts]) => {
+        if (Math.random() > 0.6) {
+          const opt = opts[Math.floor(Math.random() * opts.length)];
+          text = text.replace(new RegExp(`\\b${word}\\b`, "gi"), opt);
+        }
+      });
+
+      const idioms = ["you know", "like", "I mean", "basically", "sort of"];
+      const paragraphs = text.split('\n\n');
+      text = paragraphs.map(para => {
+        if (Math.random() > 0.8 && para.length > 50) {
+          const insert = idioms[Math.floor(Math.random() * idioms.length)];
+          const words = para.split(' ');
+          words.splice(Math.floor(Math.random() * words.length), 0, insert);
+          para = words.join(' ');
+        }
+        return para;
+      }).join('\n\n');
+
+      let sentences = text.split(/[.?!]\s*/).filter(s => s.trim());
+      sentences = sentences.map((sent, i) => {
+        const words = sent.split(' ');
+        let newLen = words.length;
+        if (i % 4 === 0) newLen = Math.max(4, Math.floor(words.length * 0.5));
+        else if (i % 4 === 1) newLen = Math.floor(words.length * 1.6);
+        for (let j = 0; j < Math.min(3, words.length); j++) {
+          const a = Math.floor(Math.random() * words.length);
+          const b = Math.floor(Math.random() * words.length);
+          [words[a], words[b]] = [words[b], words[a]];
+        }
+        words.length = newLen;
+        return words.join(' ') + (Math.random() > 0.7 ? '...' : '.');
+      });
+      text = sentences.join(' ');
+      if (Math.random() > 0.6) text += " That's how I see it anyway.";
+      output.textContent = text;
+
+      stats.aiCount++;
+      stats.lastUsed = new Date().toLocaleDateString();
+      localStorage.setItem('milkyStats', JSON.stringify(stats));
+      updateStats();
+    }
+
+    function updateStats() {
+      const totalActions = stats.aiCount + stats.editCount;
+      const percent = totalActions > 0 ? Math.round((stats.aiCount / totalActions) * 100) : 0;
+      document.getElementById('aiCount').textContent = stats.aiCount;
+      document.getElementById('editCount').textContent = stats.editCount;
+      document.getElementById('aiPercent').textContent = percent + '%';
+      document.getElementById('lastUsed').textContent = stats.lastUsed;
+    }
+
+    function saveSession() {
+      const text = output.innerText || document.getElementById('input').value;
+      if (!text.trim()) return alert("Nothing to save!");
+      const session = { date: new Date().toLocaleString(), text: text, id: Date.now() };
+      sessions.push(session);
+      localStorage.setItem('milkySessions', JSON.stringify(sessions));
+      alert("Session saved!");
+      loadHistory();
+    }
+
+    function loadHistory() {
+      const list = document.getElementById('historyList');
+      list.innerHTML = sessions.map(s => `
+        <div class="history-item">
+          <strong>${s.date}</strong><br>
+          <small>${s.text.substring(0, 100)}...</small>
+        </div>
+      `).reverse().join('');
+    }
+
+    function exportData() {
+      const data = { sessions, stats };
+      const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'milky-backup.json';
+      a.click();
+    }
+
+    function importData(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          sessions = data.sessions || [];
+          stats = data.stats || {aiCount:0,editCount:0,lastUsed:"Never"};
+          localStorage.setItem('milkySessions', JSON.stringify(sessions));
+          localStorage.setItem('milkyStats', JSON.stringify(stats));
+          loadHistory();
+          updateStats();
+          alert("Data imported successfully!");
+        } catch { alert("Invalid file"); }
+      };
+      reader.readAsText(file);
+    }
+
+    function copyOutput() {
+      navigator.clipboard.writeText(output.innerText);
+      alert("Copied!");
+    }
+
+    function downloadTxt() {
+      const blob = new Blob([output.innerText], {type: 'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'my-work.txt';
+      a.click();
+    }
+
+    function clearInput() { document.getElementById('input').value = ''; }
+    function clearDetector() { 
+      document.getElementById('detectInput').value = ''; 
+      document.getElementById('detectResult').style.display = 'none'; 
+    }
+
+    const aiWords = ["moreover","furthermore","additionally","consequently","therefore","however","nevertheless","thus","hence","indeed","notably","significantly","crucially","importantly","essentially","ultimately","comprehensive","robust","leverage","delve","realm","tapestry","embark","journey","nuance","intricate","myriad","plethora","utilize","facilitate","implement","enhance","optimize","revolutionary","groundbreaking","pivotal","paramount","imperative"];
+
+    function runDetection() {
+      let text = document.getElementById('detectInput').value.trim();
+      if (!text) return alert("Paste something first!");
+      const sentences = text.split(/[.?!]\s*/).filter(s => s.trim());
+      let aiCount = 0;
+      const highlighted = sentences.map((sent) => {
+        const low = sent.toLowerCase();
+        const hasAI = aiWords.some(w => low.includes(w));
+        const uniform = sent.split(' ').length > 20 && sent.split(' ').length < 40;
+        if (hasAI || uniform) {
+          aiCount++;
+          return `<div class="highlight-ai">${sent.trim()}.</div>`;
+        }
+        return `<div style="padding:10px;margin:8px 0;">${sent.trim()}.</div>`;
+      }).join('');
+      const aiPercent = Math.round((aiCount / sentences.length) * 100);
+      document.getElementById('aiScore').textContent = aiPercent + '%';
+      const verdictEl = document.getElementById('verdict');
+      verdictEl.textContent = aiPercent > 50 ? 'Likely AI' : 'Likely Human';
+      verdictEl.className = 'verdict ' + (aiPercent > 50 ? 'failed' : 'passed');
+      document.getElementById('aiMarked').textContent = aiCount;
+      document.getElementById('highlightedText').innerHTML = highlighted;
+      document.getElementById('detectResult').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
