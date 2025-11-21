@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Milky • A+ Writing Help</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;900&display=swap" rel="stylesheet">
-  <!-- BEST UI/UX ICONS 2025 -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
@@ -14,18 +13,32 @@
       font-family:'Inter',sans-serif;
       background:#0a0a0a;
       color:#e0e0e0;
-      height:100vh;
+      /* Remove height:100vh from body */
       overflow:hidden;
-      display:flex;
+      /* Remove display:flex from body */
     }
     body::before{
       content:"";
       position:absolute;
       inset:0;
       background:radial-gradient(circle at 20% 80%,rgba(40,40,70,0.08),transparent 50%),
-                 radial-gradient(circle at 80% 20%,rgba(30,50,80,0.06),transparent 50%);
+              radial-gradient(circle at 80% 20%,rgba(30,50,80,0.06),transparent 50%);
       z-index:-1;
     }
+
+    /* New wrapper for 80% scale */
+    #wrapper {
+      display: flex;
+      height: 100vh;
+      transform: scale(0.8);
+      /* Setting the transform origin to the top-left corner ensures it scales from the top-left */
+      transform-origin: top left;
+      /* The content is now 80% of the screen. We need to set the width to 100% / 0.8 = 125% so that the content fills the full width before scaling. */
+      width: 125vw;
+      /* We also set the height to 125% of the viewport height (100vh/0.8) to fill the height. */
+      height: 125vh;
+    }
+
 
     aside{
       width:300px;
@@ -123,68 +136,67 @@
 </head>
 <body>
 
-<aside>
-  <div class="logo"><h1>Milky</h1></div>
-  <nav>
-    <a href="#" data-tab="home" class="active">
-      <i class="ph-bold ph-house"></i> Home
-    </a>
-    <a href="#" data-tab="services">
-      <i class="ph-bold ph-book-open"></i> Services
-    </a>
-    <a href="#" data-tab="contact">
-      <i class="ph-bold ph-chat-circle-dots"></i> Contact Me
-    </a>
-  </nav>
-</aside>
+<div id="wrapper">
+  <aside>
+    <div class="logo"><h1>Milky</h1></div>
+    <nav>
+      <a href="#" data-tab="home" class="active">
+        <i class="ph-bold ph-house"></i> Home
+      </a>
+      <a href="#" data-tab="services">
+        <i class="ph-bold ph-book-open"></i> Services
+      </a>
+      <a href="#" data-tab="contact">
+        <i class="ph-bold ph-chat-circle-dots"></i> Contact Me
+      </a>
+    </nav>
+  </aside>
 
-<main>
-  <!-- HOME -->
-  <div id="home" class="tab-content">
-    <div class="header">Welcome To Milky!</div>
-    <div class="glass hero">
-      <h1>A+ Writing Help<br>Delivered Fast</h1>
-      <p <p style="font-size:1.6rem;color:#bbb;">Essays, history, creative writing, editing — 100% original, discreet, A+ guaranteed.</p>
-      
-      <div class="stats">
-        <div class="stat"><div class="stat-num">1200+</div><div class="stat-label">Assignments</div></div>
-        <div class="stat"><div class="stat-num">4.98★</div><div class="stat-label">Rating</div></div>
-        <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Online</div></div>
+  <main>
+    <div id="home" class="tab-content">
+      <div class="header">Welcome To Milky!</div>
+      <div class="glass hero">
+        <h1>A+ Writing Help<br>Delivered Fast</h1>
+        <p style="font-size:1.6rem;color:#bbb;">Essays, history, creative writing, editing — 100% original, discreet, A+ guaranteed.</p>
+        
+        <div class="stats">
+          <div class="stat"><div class="stat-num">1200+</div><div class="stat-label">Assignments</div></div>
+          <div class="stat"><div class="stat-num">4.98★</div><div class="stat-label">Rating</div></div>
+          <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Online</div></div>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- SERVICES -->
-  <div id="services" class="tab-content hidden">
-    <div class="header">Services</div>
-    <div class="glass">
-      <ul style="font-size:1.3rem;line-height:2.4;color:#ddd;">
-        <li>Essays & Research Papers</li>
-        <li>History Assignments</li>
-        <li>Creative Writing</li>
-        <li>Editing & Proofreading</li>
-      </ul>
+    <div id="services" class="tab-content hidden">
+      <div class="header">Services</div>
+      <div class="glass">
+        <ul style="font-size:1.3rem;line-height:2.4;color:#ddd;">
+          <li>Essays & Research Papers</li>
+          <li>History Assignments</li>
+          <li>Creative Writing</li>
+          <li>Editing & Proofreading</li>
+        </ul>
+      </div>
     </div>
-  </div>
 
-  <!-- CONTACT -->
-  <div id="contact" class="tab-content hidden">
-    <div class="header">Contact Me</div>
-    <div class="glass">
-      <p style="margin-bottom:2rem;color:#ccc;font-size:1.2rem;">
-        I reply in minutes - fastest on socials. I’ll add you back instantly.
-      </p>
-      <form class="contact-form" action="https://formspree.io/f/xkgqajpr" method="POST">
-        <input type="text" name="name" placeholder="Your Name — REQUIRED " required>
-        <input type="email" name="email" placeholder="Your Email — REQUIRED " required>
-        <input type="text" name="social" placeholder="Social (Insta/Discord/Snap) — REQUIRED" required>
-        <input type="text" name="topic" placeholder="Assignment Topic — REQUIRED " required>
-        <textarea name="message" rows="6" placeholder="Deadline, word count, instructions... — REQUIRED " required></textarea>
-        <button type="submit">Send Email </button>
-      </form>
+    <div id="contact" class="tab-content hidden">
+      <div class="header">Contact Me</div>
+      <div class="glass">
+        <p style="margin-bottom:2rem;color:#ccc;font-size:1.2rem;">
+          I reply in minutes - fastest on socials. I’ll add you back instantly.
+        </p>
+        <form class="contact-form" action="https://formspree.io/f/xkgqajpr" method="POST">
+          <input type="text" name="name" placeholder="Your Name — REQUIRED " required>
+          <input type="email" name="email" placeholder="Your Email — REQUIRED " required>
+          <input type="text" name="social" placeholder="Social (Insta/Discord/Snap) — REQUIRED" required>
+          <input type="text" name="topic" placeholder="Assignment Topic — REQUIRED " required>
+          <textarea name="message" rows="6" placeholder="Deadline, word count, instructions... — REQUIRED " required></textarea>
+          <button type="submit">Send Email </button>
+        </form>
+      </div>
     </div>
-  </div>
-</main>
+  </main>
+</div>
 
 <script>
   document.querySelectorAll('nav a').forEach(a => {
