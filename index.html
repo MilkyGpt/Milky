@@ -9,7 +9,6 @@
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    html { font-size: 1.25rem; } /* Optimized for 80% zoom perfection */
     *{margin:0;padding:0;box-sizing:border-box}
     body{
       font-family:'Inter',sans-serif;
@@ -18,6 +17,10 @@
       height:100vh;
       overflow:hidden;
       display:flex;
+
+      /* NEW: scale to 80% */
+      transform: scale(0.8);
+      transform-origin: top left;
     }
     body::before{
       content:"";
@@ -27,6 +30,7 @@
                  radial-gradient(circle at 80% 20%,rgba(30,50,80,0.06),transparent 50%);
       z-index:-1;
     }
+
     aside{
       width:300px;
       background:rgba(12,12,18,0.98);
@@ -62,6 +66,7 @@
       font-size:1.4rem;
       font-weight:900;
     }
+
     main{
       flex:1;
       padding:3rem 4rem;
@@ -85,6 +90,7 @@
     .stats{display:flex;gap:3rem;margin:3rem 0;flex-wrap:wrap}
     .stat-num{font-size:3.5rem;font-weight:900;color:#fff}
     .stat-label{font-size:1.1rem;color:#999}
+
     .contact-form input,
     .contact-form textarea{
       width:100%;
@@ -115,10 +121,12 @@
       margin-top:1.5rem;
     }
     .contact-form button:hover{background:#eee}
+
     .hidden{display:none}
   </style>
 </head>
 <body>
+
 <aside>
   <div class="logo"><h1>Milky</h1></div>
   <nav>
@@ -133,14 +141,15 @@
     </a>
   </nav>
 </aside>
+
 <main>
   <!-- HOME -->
   <div id="home" class="tab-content">
     <div class="header">Welcome To Milky!</div>
     <div class="glass hero">
       <h1>A+ Writing Help<br>Delivered Fast</h1>
-      <p>Essays, history, creative writing, editing — 100% original, discreet, A+ guaranteed.</p>
-     
+      <p style="font-size:1.6rem;color:#bbb;">Essays, history, creative writing, editing — 100% original, discreet, A+ guaranteed.</p>
+      
       <div class="stats">
         <div class="stat"><div class="stat-num">1200+</div><div class="stat-label">Assignments</div></div>
         <div class="stat"><div class="stat-num">4.98★</div><div class="stat-label">Rating</div></div>
@@ -148,6 +157,7 @@
       </div>
     </div>
   </div>
+
   <!-- SERVICES -->
   <div id="services" class="tab-content hidden">
     <div class="header">Services</div>
@@ -160,6 +170,7 @@
       </ul>
     </div>
   </div>
+
   <!-- CONTACT -->
   <div id="contact" class="tab-content hidden">
     <div class="header">Contact Me</div>
@@ -178,6 +189,7 @@
     </div>
   </div>
 </main>
+
 <script>
   document.querySelectorAll('nav a').forEach(a => {
     a.onclick = e => {
