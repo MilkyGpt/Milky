@@ -5,11 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Milky • A+ Writing Help</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;900&display=swap" rel="stylesheet">
-  <!-- BEST UI/UX ICONS 2025 -->
   <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
+    
+    /* THIS MAKES IT LOOK PERFECT AT 70% ZOOM */
+    html { font-size: 18px; } /* Base font bigger = perfect at 70% zoom */
+    
     body{
       font-family:'Inter',sans-serif;
       background:#0a0a0a;
@@ -28,95 +30,125 @@
     }
 
     aside{
-      width:300px;
+      width:360px;
       background:rgba(12,12,18,0.98);
       backdrop-filter:blur(20px);
       border-right:1px solid rgba(255,255,255,0.06);
-      padding:3rem 2rem;
+      padding:4rem 2.5rem;
     }
     .logo h1{
-      font-size:4.2rem;
+      font-size:5.8rem;
       font-weight:900;
       text-align:center;
       color:#fff;
-      letter-spacing:-2px;
+      letter-spacing:-3px;
     }
     nav a{
       display:flex;
       align-items:center;
-      gap:1rem;
-      padding:1.1rem 1.4rem;
-      margin:0.5rem 0;
-      border-radius:12px;
-      font-weight:500;
-      color:#aaa;
+      gap:1.4rem;
+      padding:1.6rem 1.8rem;
+      margin:1rem 0;
+      border-radius:16px;
+      font-weight:600;
+      font-size:1.4rem;
+      color:#ccc;
       transition:all .3s;
     }
-    nav a:hover{background:rgba(255,255,255,0.1);color:#fff}
+    nav a:hover{background:rgba(255,255,255,0.12);color:#fff}
     nav a.active{
-      background:rgba(255,255,255,0.15);
+      background:rgba(255,255,255,0.18);
       color:#fff;
-      font-weight:600;
+      font-weight:700;
+    }
+    nav a i{
+      font-size:1.8rem;
     }
     nav a.active i{
-      font-size:1.4rem;
-      font-weight:900;
+      font-size:2rem;
     }
 
     main{
       flex:1;
-      padding:3rem 4rem;
+      padding:5rem 6rem;
       overflow-y:auto;
     }
     .header{
-      font-size:3rem;
-      font-weight:700;
+      font-size:4.2rem;
+      font-weight:900;
       color:#fff;
-      margin-bottom:2.5rem;
+      margin-bottom:3.5rem;
     }
     .glass{
-      background:rgba(25,25,35,0.75);
-      backdrop-filter:blur(16px);
-      border:1px solid rgba(255,255,255,0.1);
-      border-radius:16px;
-      padding:2.5rem;
+      background:rgba(25,25,35,0.8);
+      backdrop-filter:blur(20px);
+      border:1px solid rgba(255,255,255,0.12);
+      border-radius:24px;
+      padding:4rem;
     }
-    .hero h1{font-size:5.5rem;font-weight:900;line-height:1.1;color:#fff;margin-bottom:1rem}
-    .hero p{font-size:1.6rem;color:#bbb;margin-bottom:3rem;max-width:800px}
-    .stats{display:flex;gap:3rem;margin:3rem 0;flex-wrap:wrap}
-    .stat-num{font-size:3.5rem;font-weight:900;color:#fff}
-    .stat-label{font-size:1.1rem;color:#999}
+    .hero h1{
+      font-size:7.5rem;
+      font-weight:900;
+      line-height:1.05;
+      color:#fff;
+      margin-bottom:2rem;
+    }
+    .hero p{
+      font-size:2.1rem;
+      color:#ccc;
+      margin-bottom:4rem;
+      max-width:900px;
+    }
+    .stats{
+      display:flex;
+      gap:5rem;
+      margin:4rem 0;
+      flex-wrap:wrap;
+    }
+    .stat-num{
+      font-size:5rem;
+      font-weight:900;
+      color:#fff;
+    }
+    .stat-label{
+      font-size:1.6rem;
+      color:#aaa;
+    }
 
     .contact-form input,
     .contact-form textarea{
       width:100%;
-      padding:1.2rem 1.6rem;
-      margin:1rem 0;
-      background:rgba(40,40,55,0.7);
-      border:1px solid rgba(255,255,255,0.15);
-      border-radius:12px;
+      padding:1.8rem 2.2rem;
+      margin:1.6rem 0;
+      background:rgba(40,40,55,0.8);
+      border:1px solid rgba(255,255,255,0.18);
+      border-radius:16px;
       color:#fff;
-      font-size:1.1rem;
+      font-size:1.5rem;
     }
     .contact-form input:focus,
     .contact-form textarea:focus{
       outline:none;
-      border-color:#999;
-      background:rgba(50,50,70,0.8);
+      border-color:#aaa;
+      background:rgba(55,55,75,0.9);
     }
     .contact-form button{
       width:100%;
-      padding:1.4rem;
+      padding:2rem;
       background:#fff;
       color:#000;
-      font-weight:700;
-      font-size:1.3rem;
+      font-weight:900;
+      font-size:1.8rem;
       border:none;
-      border-radius:12px;
+      border-radius:16px;
       cursor:pointer;
-      margin-top:1.5rem;
+      margin-top:2rem;
+      transition:all .3s;
     }
-    .contact-form button:hover{background:#eee}
+    .contact-form button:hover{
+      background:#f0f0f0;
+      transform:translateY(-4px);
+    }
 
     .hidden{display:none}
   </style>
@@ -139,12 +171,11 @@
 </aside>
 
 <main>
-  <!-- HOME -->
   <div id="home" class="tab-content">
     <div class="header">Welcome To Milky!</div>
     <div class="glass hero">
       <h1>A+ Writing Help<br>Delivered Fast</h1>
-      <p <p style="font-size:1.6rem;color:#bbb;">Essays, history, creative writing, editing — 100% original, discreet, A+ guaranteed.</p>
+      <p>Essays, history, creative writing, editing — 100% original, discreet, A+ guaranteed.</p>
       
       <div class="stats">
         <div class="stat"><div class="stat-num">1200+</div><div class="stat-label">Assignments</div></div>
@@ -154,11 +185,10 @@
     </div>
   </div>
 
-  <!-- SERVICES -->
   <div id="services" class="tab-content hidden">
     <div class="header">Services</div>
     <div class="glass">
-      <ul style="font-size:1.3rem;line-height:2.4;color:#ddd;">
+      <ul style="font-size:2rem;line-height:3;color:#ddd;">
         <li>Essays & Research Papers</li>
         <li>History Assignments</li>
         <li>Creative Writing</li>
@@ -167,20 +197,19 @@
     </div>
   </div>
 
-  <!-- CONTACT -->
   <div id="contact" class="tab-content hidden">
     <div class="header">Contact Me</div>
     <div class="glass">
-      <p style="margin-bottom:2rem;color:#ccc;font-size:1.2rem;">
-        I reply in minutes - fastest on socials. I’ll add you back instantly.
+      <p style="margin-bottom:3rem;color:#ccc;font-size:1.8rem;">
+        I reply in minutes — fastest on socials. I’ll add you back instantly.
       </p>
       <form class="contact-form" action="https://formspree.io/f/xkgqajpr" method="POST">
-        <input type="text" name="name" placeholder="Your Name — REQUIRED " required>
-        <input type="email" name="email" placeholder="Your Email — REQUIRED " required>
+        <input type="text" name="name" placeholder="Your Name — REQUIRED" required>
+        <input type="email" name="email" placeholder="Your Email — REQUIRED" required>
         <input type="text" name="social" placeholder="Social (Insta/Discord/Snap) — REQUIRED" required>
-        <input type="text" name="topic" placeholder="Assignment Topic — REQUIRED " required>
-        <textarea name="message" rows="6" placeholder="Deadline, word count, instructions... — REQUIRED " required></textarea>
-        <button type="submit">Send Email </button>
+        <input type="text" name="topic" placeholder="Assignment Topic — REQUIRED" required>
+        <textarea name="message" rows="7" placeholder="Deadline, word count, instructions... — REQUIRED" required></textarea>
+        <button type="submit">Send — I Got You</button>
       </form>
     </div>
   </div>
