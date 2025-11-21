@@ -3,200 +3,199 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milky • Writing Expert</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+  <title>Milky • A+ Writing Help</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;900&display=swap" rel="stylesheet">
+  <!-- BEST UI/UX ICONS 2025 -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #0d0d0d;
-      color: #e0e0e0;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{
+      font-family:'Inter',sans-serif;
+      background:#0a0a0a;
+      color:#e0e0e0;
+      height:100vh;
+      overflow:hidden;
+      display:flex;
+    }
+    body::before{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:radial-gradient(circle at 20% 80%,rgba(40,40,70,0.08),transparent 50%),
+                 radial-gradient(circle at 80% 20%,rgba(30,50,80,0.06),transparent 50%);
+      z-index:-1;
     }
 
-    /* Subtle live background */
-    body::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 20% 80%, rgba(30,30,50,0.1), transparent 50%),
-                  radial-gradient(circle at 80% 20%, rgba(20,40,60,0.08), transparent 50%);
-      background-size: 200% 200%;
-      animation: bg 30s ease infinite;
-      z-index: -1;
+    aside{
+      width:300px;
+      background:rgba(12,12,18,0.98);
+      backdrop-filter:blur(20px);
+      border-right:1px solid rgba(255,255,255,0.06);
+      padding:3rem 2rem;
     }
-    @keyframes bg { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
-
-    /* Sidebar */
-    aside {
-      width: 280px;
-      background: rgba(15,15,20,0.95);
-      backdrop-filter: blur(20px);
-      border-right: 1px solid rgba(255,255,255,0.06);
-      padding: 2rem 1.5rem;
+    .logo h1{
+      font-size:4.2rem;
+      font-weight:900;
+      text-align:center;
+      color:#fff;
+      letter-spacing:-2px;
     }
-    .logo {
-      text-align: center;
-      margin-bottom: 3rem;
-      padding-bottom: 2rem;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
+    nav a{
+      display:flex;
+      align-items:center;
+      gap:1rem;
+      padding:1.1rem 1.4rem;
+      margin:0.5rem 0;
+      border-radius:12px;
+      font-weight:500;
+      color:#aaa;
+      transition:all .3s;
     }
-    .logo h1 {
-      font-size: 3.2rem;
-      font-weight: 900;
-      color: #fff;
+    nav a:hover{background:rgba(255,255,255,0.1);color:#fff}
+    nav a.active{
+      background:rgba(255,255,255,0.15);
+      color:#fff;
+      font-weight:600;
     }
-    nav a {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      padding: 1rem 1.2rem;
-      margin: 0.4rem 0;
-      border-radius: 12px;
-      font-weight: 500;
-      color: #aaa;
-      transition: all 0.3s ease;
-    }
-    nav a:hover {
-      background: rgba(255,255,255,0.08);
-      color: #fff;
-    }
-    nav a.active {
-      background: rgba(255,255,255,0.12);
-      color: #fff;
-      font-weight: 600;
+    nav a.active i{
+      font-size:1.4rem;
+      font-weight:900;
     }
 
-    /* Main Panel */
-    main {
-      flex: 1;
-      padding: 2rem;
-      overflow-y: auto;
+    main{
+      flex:1;
+      padding:3rem 4rem;
+      overflow-y:auto;
     }
-    .header {
-      font-size: 2.4rem;
-      font-weight: 700;
-      margin-bottom: 2rem;
-      color: #fff;
+    .header{
+      font-size:3rem;
+      font-weight:700;
+      color:#fff;
+      margin-bottom:2.5rem;
     }
+    .glass{
+      background:rgba(25,25,35,0.75);
+      backdrop-filter:blur(16px);
+      border:1px solid rgba(255,255,255,0.1);
+      border-radius:16px;
+      padding:2.5rem;
+    }
+    .hero h1{font-size:5.5rem;font-weight:900;line-height:1.1;color:#fff;margin-bottom:1rem}
+    .hero p{font-size:1.6rem;color:#bbb;margin-bottom:3rem;max-width:800px}
+    .stats{display:flex;gap:3rem;margin:3rem 0;flex-wrap:wrap}
+    .stat-num{font-size:3.5rem;font-weight:900;color:#fff}
+    .stat-label{font-size:1.1rem;color:#999}
 
-    /* Glass Card */
-    .glass-card {
-      background: rgba(25,25,35,0.7);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 16px;
-      padding: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    /* Contact Form */
     .contact-form input,
-    .contact-form textarea {
-      width: 100%;
-      padding: 1rem 1.4rem;
-      margin: 1rem 0;
-      background: rgba(40,40,50,0.6);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 12px;
-      color: #fff;
-      font-size: 1rem;
+    .contact-form textarea{
+      width:100%;
+      padding:1.2rem 1.6rem;
+      margin:1rem 0;
+      background:rgba(40,40,55,0.7);
+      border:1px solid rgba(255,255,255,0.15);
+      border-radius:12px;
+      color:#fff;
+      font-size:1.1rem;
     }
     .contact-form input:focus,
-    .contact-form textarea:focus {
-      outline: none;
-      border-color: #888;
-      background: rgba(50,50,60,0.8);
+    .contact-form textarea:focus{
+      outline:none;
+      border-color:#999;
+      background:rgba(50,50,70,0.8);
     }
-    .contact-form button {
-      width: 100%;
-      padding: 1.2rem;
-      background: #fff;
-      color: #000;
-      font-weight: 700;
-      font-size: 1.1rem;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: 0.3s;
+    .contact-form button{
+      width:100%;
+      padding:1.4rem;
+      background:#fff;
+      color:#000;
+      font-weight:700;
+      font-size:1.3rem;
+      border:none;
+      border-radius:12px;
+      cursor:pointer;
+      margin-top:1.5rem;
     }
-    .contact-form button:hover {
-      background: #ddd;
-    }
+    .contact-form button:hover{background:#eee}
 
-    .hidden { display: none; }
+    .hidden{display:none}
   </style>
 </head>
 <body>
 
-  <aside>
-    <div class="logo">
-      <h1>Milky</h1>
-    </div>
-    <nav>
-      <a href="#" data-tab="home" class="active"><i class="fas fa-home"></i> Home</a>
-      <a href="#" data-tab="services"><i class="fas fa-list"></i> Services</a>
-      <a href="#" data-tab="contact"><i class="fas fa-envelope"></i> Contact Me</a>
-    </nav>
-  </aside>
+<aside>
+  <div class="logo"><h1>Milky</h1></div>
+  <nav>
+    <a href="#" data-tab="home" class="active">
+      <i class="ph-bold ph-house"></i> Home
+    </a>
+    <a href="#" data-tab="services">
+      <i class="ph-bold ph-book-open"></i> Services
+    </a>
+    <a href="#" data-tab="contact">
+      <i class="ph-bold ph-chat-circle-dots"></i> Contact Me
+    </a>
+  </nav>
+</aside>
 
-  <main>
-    <div id="home" class="tab-content">
-      <div class="header">Welcome</div>
-      <div class="glass-card">
-        <h2 style="font-size:2rem;margin-bottom:1rem;">Professional Writing Help</h2>
-        <p style="color:#ccc;line-height:1.8;">
-          I help with essays, history assignments, creative writing, editing, and paragraphs.<br>
-          100% original • A+ quality • Fast delivery • Online only
-        </p>
+<main>
+  <!-- HOME -->
+  <div id="home" class="tab-content">
+    <div class="header">Welcome To Milky!</div>
+    <div class="glass hero">
+      <h1>A+ Writing Help<br>Delivered Fast</h1>
+      <p <p style="font-size:1.6rem;color:#bbb;">Essays, history, creative writing, editing — 100% original, discreet, A+ guaranteed.</p>
+      
+      <div class="stats">
+        <div class="stat"><div class="stat-num">1200+</div><div class="stat-label">Assignments</div></div>
+        <div class="stat"><div class="stat-num">4.98★</div><div class="stat-label">Rating</div></div>
+        <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Online</div></div>
       </div>
     </div>
+  </div>
 
-    <div id="services" class="tab-content hidden">
-      <div class="header">Services</div>
-      <div class="glass-card">
-        <ul style="line-height:2.2;font-size:1.1rem;color:#ddd;">
-          <li>• Essays & Research Papers</li>
-          <li>• History Assignments</li>
-          <li>• Creative Writing</li>
-          <li>• Paragraphs & Editing</li>
-          <li>• Proofreading</li>
-        </ul>
-      </div>
+  <!-- SERVICES -->
+  <div id="services" class="tab-content hidden">
+    <div class="header">Services</div>
+    <div class="glass">
+      <ul style="font-size:1.3rem;line-height:2.4;color:#ddd;">
+        <li>Essays & Research Papers</li>
+        <li>History Assignments</li>
+        <li>Creative Writing</li>
+        <li>Editing & Proofreading</li>
+      </ul>
     </div>
+  </div>
 
-    <div id="contact" class="tab-content hidden">
-      <div class="header">Contact Me</div>
-      <div class="glass-card">
-        <p style="margin-bottom:1.5rem;color:#ccc;">
-          I reply fastest on social media — I will add/follow you back immediately
-        </p>
-        <form class="contact-form" action="https://formspree.io/f/xkgqajpr" method="POST">
-          <input type="text" name="name" placeholder="Your Name" required>
-          <input type="email" name="email" placeholder="Your Email" required>
-          <input type="text" name="social" placeholder="Social Media (Insta/Discord/Snap) — REQUIRED" required>
-          <input type="text" name="topic" placeholder="Assignment Topic" required>
-          <textarea name="message" rows="6" placeholder="Deadline, word count, instructions..." required></textarea>
-          <button type="submit">Send Message</button>
-        </form>
-      </div>
+  <!-- CONTACT -->
+  <div id="contact" class="tab-content hidden">
+    <div class="header">Contact Me</div>
+    <div class="glass">
+      <p style="margin-bottom:2rem;color:#ccc;font-size:1.2rem;">
+        I reply in minutes - fastest on socials. I’ll add you back instantly.
+      </p>
+      <form class="contact-form" action="https://formspree.io/f/xkgqajpr" method="POST">
+        <input type="text" name="name" placeholder="Your Name — REQUIRED " required>
+        <input type="email" name="email" placeholder="Your Email — REQUIRED " required>
+        <input type="text" name="social" placeholder="Social (Insta/Discord/Snap) — REQUIRED" required>
+        <input type="text" name="topic" placeholder="Assignment Topic — REQUIRED " required>
+        <textarea name="message" rows="6" placeholder="Deadline, word count, instructions... — REQUIRED " required></textarea>
+        <button type="submit">Send Email </button>
+      </form>
     </div>
-  </main>
+  </div>
+</main>
 
-  <script>
-    document.querySelectorAll('nav a').forEach(link => {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.querySelectorAll('nav a').forEach(a => a.classList.remove('active'));
-        this.classList.add('active');
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-        document.getElementById(this.dataset.tab).classList.remove('hidden');
-      });
-    });
-  </script>
+<script>
+  document.querySelectorAll('nav a').forEach(a => {
+    a.onclick = e => {
+      e.preventDefault();
+      document.querySelectorAll('nav a').forEach(x => x.classList.remove('active'));
+      a.classList.add('active');
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
+      document.getElementById(a.dataset.tab).classList.remove('hidden');
+    }
+  });
+</script>
 </body>
 </html>
