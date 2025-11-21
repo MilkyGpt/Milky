@@ -13,9 +13,7 @@
       font-family:'Inter',sans-serif;
       background:#0a0a0a;
       color:#e0e0e0;
-      /* Remove height:100vh from body */
       overflow:hidden;
-      /* Remove display:flex from body */
     }
     body::before{
       content:"";
@@ -26,17 +24,17 @@
       z-index:-1;
     }
 
-    /* New wrapper for 80% scale */
+    /* Updated wrapper for 70% scale */
     #wrapper {
       display: flex;
       height: 100vh;
-      transform: scale(0.8);
-      /* Setting the transform origin to the top-left corner ensures it scales from the top-left */
+      /* --- Changed to 0.7 for 70% scale --- */
+      transform: scale(0.7); 
       transform-origin: top left;
-      /* The content is now 80% of the screen. We need to set the width to 100% / 0.8 = 125% so that the content fills the full width before scaling. */
-      width: 125vw;
-      /* We also set the height to 125% of the viewport height (100vh/0.8) to fill the height. */
-      height: 125vh;
+      /* --- Changed to 142.86vw (100 / 0.7) --- */
+      width: 142.86vw; 
+      /* --- Changed to 142.86vh (100 / 0.7) --- */
+      height: 142.86vh; 
     }
 
 
