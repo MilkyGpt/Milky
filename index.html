@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milky AI Humanizer </title>
+    <!-- Updated Title -->
+    <title>Milky AI Humanizer</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -274,19 +275,21 @@
                 <div class="flex items-center space-x-3">
                     <!-- Ethereal Star Icon for Milky AI -->
                     <i class="ph-bold ph-star-four-points text-3xl" style="color: var(--color-accent);"></i>
-                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI Humanize</h1>
+                    <!-- Updated Branding -->
+                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI Humanizer</h1>
                 </div>
             </header>
             
             <!-- Mobile-only Logo for Small Screens -->
             <header class="px-4 py-3 border-b border-nd-border mb-0 lg:hidden flex justify-center">
-                <i class="ph-bold ph-star-four-points text-2xl" style="color: var(--color-accent);" title="Milky AI"></i>
+                <i class="ph-bold ph-star-four-points text-2xl" style="color: var(--color-accent);" title="Milky AI Humanizer"></i>
             </header>
 
             <!-- Navigation Links -->
             <div class="space-y-1 lg:block flex overflow-x-auto justify-center">
                 <a href="#" class="nav-link active" data-view="humanizer">
                     <i class="ph-bold ph-magic-wand"></i>
+                    <!-- Updated Tab Name -->
                     <span>Grammar Removal Tool</span>
                 </a>
                 <a href="#" class="nav-link" data-view="terms">
@@ -301,7 +304,8 @@
             <!-- Max width wrapper for better UX on large monitors -->
             <div class="w-full max-w-6xl">
                 <header class="mb-12">
-                    <h2 class="text-4xl font-extrabold text-nd-text-primary">AI Bypass Dashboard</h2>
+                    <!-- Updated Dashboard Title -->
+                    <h2 class="text-4xl font-extrabold text-nd-text-primary">Milky AI Humanizer Dashboard</h2>
                     <p class="text-lg text-nd-text-secondary mt-2">The fastest way to make robotic text sound human, with absolutely no complex grammar.</p>
                 </header>
 
@@ -353,9 +357,10 @@
                                     </div>
                                 </div>
 
+                                <!-- Updated Button Text: "Humanize Text" -->
                                 <button id="humanize-btn" class="btn-primary w-full" onclick="humanizeText()">
                                     <div id="humanize-loader" class="loader hidden"></div>
-                                    <span>Humanize Text </span>
+                                    <span>Humanize Text</span>
                                 </button>
                             </div>
 
@@ -437,10 +442,10 @@
          * Generic function to call the Gemini API with exponential backoff.
          */
         async function callGeminiApi(userQuery, systemPrompt, useSearch = true, maxRetries = 5) {
-            // YOUR API KEY IS NOW EMBEDDED HERE
+            // API Key successfully inserted from previous steps
             const apiKey = "AIzaSyDM6f14Y9qq_wBxBbzSryVyfJ-vuG9YoMw"; 
             
-            // Define the direct Gemini endpoint URL. We removed the unreliable cors.sh proxy.
+            // Define the direct Gemini endpoint URL (No CORS proxy is used here)
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
             const payload = {
@@ -579,6 +584,7 @@
             citationsContainer.innerHTML = '';
             sourcesLabel.classList.add('hidden');
 
+            // STRICTEST GRAMMAR REMOVAL RULES APPLIED
             const constraint = "CRITICAL INSTRUCTIONS: You MUST use the simplest possible English words. Only use vocabulary suitable for a 4th-grade reading level. You must use only the most basic, short, and 'easy to understand English' words possible; use the absolute simplest vocabulary. DO NOT use complex grammar formal phrasing or academic structures. You must use COMPLETELY NEW PHRASING and vocabulary to paraphrase the content. Punctuation must be simple; strictly avoid periods (.), em dashes, ellipses, question marks (?), and semicolons (;). CRITICAL RULE: The ENTIRE generated text body must contain NO PERIODS (.).";
 
             const systemPrompt = `You are a text fixer; your job is to change the writing so it sounds very fluent natural and like a person wrote it taking out any robotic parts.
@@ -613,6 +619,7 @@
                 btn.disabled = false;
                 loader.classList.add('hidden');
                 btn.classList.remove('flex', 'items-center', 'justify-center');
+                // Updated Button Text on reset
                 btn.querySelector('span').textContent = 'Humanize Text';
             }
         }
@@ -719,7 +726,8 @@
                 dashboardTitle.textContent = 'Information Center';
                 dashboardSubtitle.textContent = 'Important rules and notices for using this tool.';
             } else {
-                dashboardTitle.textContent = 'AI Bypass Dashboard';
+                // Updated Title
+                dashboardTitle.textContent = 'Milky AI Humanizer Dashboard';
                 dashboardSubtitle.textContent = 'The fastest way to make robotic text sound human, with absolutely no complex grammar.';
             }
 
