@@ -433,14 +433,15 @@
          * Generic function to call the Gemini API with exponential backoff.
          */
         async function callGeminiApi(userQuery, systemPrompt, useSearch = true, maxRetries = 5) {
-            const apiKey = ""; 
+            // YOUR API KEY IS NOW EMBEDDED HERE
+            const apiKey = "AIzaSyDM6f14Y9qq_wBxBbzSryVyfJ-vuG9YoMw"; 
             
-            // --- CRITICAL FIX FOR GITHUB PAGES/CORS - SWITCHED TO cors.sh ---
-            const targetGeminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            // 1. Define the actual Gemini endpoint URL
+            const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
             
-            // NEW CORS Proxy URL: Prepending the proxy to the target URL
-            const apiUrl = `https://cors.sh/${targetGeminiUrl}`;
-            // -------------------------------------------------------------
+            // 2. Prepend the CORS Proxy URL to the Gemini endpoint
+            // This is necessary because GitHub Pages blocks direct API calls (CORS error).
+            const apiUrl = `https://cors.sh/${geminiEndpoint}`;
 
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
@@ -604,7 +605,7 @@
 
             } catch (error) {
                 // Friendly error message for the user
-                output.textContent = `Error: The tool failed to run because of a network problem or the API is busy. This is usually temporary. Please try again in 30 seconds. (Your connection via the CORS proxy may be unstable: ${error.message})`;
+                output.textContent = `Error: The tool failed to run because of a network problem or the API is busy. This is usually temporary. This is likely still a CORS issue or a problem with the API key or proxy. Please double-check your key and try again later. (Error: ${error.message})`;
                 citationsContainer.innerHTML = '';
                 console.error("The API request failed:", error);
             } finally {
