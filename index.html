@@ -274,7 +274,7 @@
                 <div class="flex items-center space-x-3">
                     <!-- Ethereal Star Icon for Milky AI -->
                     <i class="ph-bold ph-star-four-points text-3xl" style="color: var(--color-accent);"></i>
-                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI Humanizer </h1>
+                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI Humanize</h1>
                 </div>
             </header>
             
@@ -355,7 +355,7 @@
 
                                 <button id="humanize-btn" class="btn-primary w-full" onclick="humanizeText()">
                                     <div id="humanize-loader" class="loader hidden"></div>
-                                    <span>REMOVE ALL GRAMMAR AND FIX TEXT</span>
+                                    <span>Humanize Text </span>
                                 </button>
                             </div>
 
@@ -613,7 +613,7 @@
                 btn.disabled = false;
                 loader.classList.add('hidden');
                 btn.classList.remove('flex', 'items-center', 'justify-center');
-                btn.querySelector('span').textContent = 'Humanize Text ';
+                btn.querySelector('span').textContent = 'REMOVE ALL GRAMMAR AND FIX TEXT';
             }
         }
         
