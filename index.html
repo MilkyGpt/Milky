@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milky AI Humanizer </title>
+    <title>Milky AI Dark Theme Suite</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -274,13 +274,13 @@
                 <div class="flex items-center space-x-3">
                     <!-- Ethereal Star Icon for Milky AI -->
                     <i class="ph-bold ph-star-four-points text-3xl" style="color: var(--color-accent);"></i>
-                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI Humanize </h1>
+                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI Suite</h1>
                 </div>
             </header>
             
             <!-- Mobile-only Logo for Small Screens -->
             <header class="px-4 py-3 border-b border-nd-border mb-0 lg:hidden flex justify-center">
-                <i class="ph-bold ph-star-four-points text-2xl" style="color: var(--color-accent);" title="Milky Humanize"></i>
+                <i class="ph-bold ph-star-four-points text-2xl" style="color: var(--color-accent);" title="Milky AI Suite"></i>
             </header>
 
             <!-- Navigation Links -->
@@ -435,12 +435,12 @@
         async function callGeminiApi(userQuery, systemPrompt, useSearch = true, maxRetries = 5) {
             const apiKey = ""; 
             
-            // --- CRITICAL FIX FOR GITHUB PAGES/CORS ---
-            // We encode the Gemini API URL and route it through a public CORS proxy.
+            // --- CRITICAL FIX FOR GITHUB PAGES/CORS - SWITCHED TO cors.sh ---
             const targetGeminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            const proxyUrl = "https://corsproxy.io/?"; 
-            const apiUrl = proxyUrl + encodeURIComponent(targetGeminiUrl);
-            // ----------------------------------------
+            
+            // NEW CORS Proxy URL: Prepending the proxy to the target URL
+            const apiUrl = `https://cors.sh/${targetGeminiUrl}`;
+            // -------------------------------------------------------------
 
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
@@ -499,6 +499,7 @@
                     }
                 } catch (error) {
                     if (attempt === maxRetries - 1) {
+                        // Throw the final error after all retries fail
                         throw error;
                     }
                     const delay = Math.pow(2, attempt) * 1000 + Math.random() * 500;
@@ -603,9 +604,9 @@
 
             } catch (error) {
                 // Friendly error message for the user
-                output.textContent = `Error: The tool is having trouble connecting to the AI fixer right now. This is usually temporary. Please wait a minute and try again. (If this is on GitHub, it is likely a CORS issue, but we are using a proxy to try and fix it!)`;
+                output.textContent = `Error: The tool failed to run because of a network problem or the API is busy. This is usually temporary. Please try again in 30 seconds. (Your connection via the CORS proxy may be unstable: ${error.message})`;
                 citationsContainer.innerHTML = '';
-                console.error("The API request failed due to CORS or network issues:", error);
+                console.error("The API request failed:", error);
             } finally {
                 // Reset UI state
                 btn.disabled = false;
