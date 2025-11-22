@@ -436,12 +436,9 @@
             // YOUR API KEY IS NOW EMBEDDED HERE
             const apiKey = "AIzaSyDM6f14Y9qq_wBxBbzSryVyfJ-vuG9YoMw"; 
             
-            // 1. Define the actual Gemini endpoint URL
-            const geminiEndpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-            
-            // 2. Prepend the CORS Proxy URL to the Gemini endpoint
-            // This is necessary because GitHub Pages blocks direct API calls (CORS error).
-            const apiUrl = `https://cors.sh/${geminiEndpoint}`;
+            // Define the direct Gemini endpoint URL. We removed the unreliable cors.sh proxy.
+            // The Canvas environment should handle CORS for this direct endpoint.
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
@@ -605,7 +602,7 @@
 
             } catch (error) {
                 // Friendly error message for the user
-                output.textContent = `Error: The tool failed to run because of a network problem or the API is busy. This is usually temporary. This is likely still a CORS issue or a problem with the API key or proxy. Please double-check your key and try again later. (Error: ${error.message})`;
+                output.textContent = `Error: The tool failed to run because of a network problem. This is usually due to CORS rules or an invalid API key. Please verify your key's status in the Google AI Studio and ensure it has no domain restrictions. (Error: ${error.message})`;
                 citationsContainer.innerHTML = '';
                 console.error("The API request failed:", error);
             } finally {
