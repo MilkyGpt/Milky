@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Milky AI Humanizer </title>
+    <title>Milky AI Dark Theme Suite</title>
     
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -274,13 +274,13 @@
                 <div class="flex items-center space-x-3">
                     <!-- Ethereal Star Icon for Milky AI -->
                     <i class="ph-bold ph-star-four-points text-3xl" style="color: var(--color-accent);"></i>
-                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI Humanizer</h1>
+                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI Humanizer </h1>
                 </div>
             </header>
             
             <!-- Mobile-only Logo for Small Screens -->
             <header class="px-4 py-3 border-b border-nd-border mb-0 lg:hidden flex justify-center">
-                <i class="ph-bold ph-star-four-points text-2xl" style="color: var(--color-accent);" title="Milky AI Humanize"></i>
+                <i class="ph-bold ph-star-four-points text-2xl" style="color: var(--color-accent);" title="Milky AI"></i>
             </header>
 
             <!-- Navigation Links -->
@@ -325,7 +325,9 @@
                                     <h3 class="text-xl font-semibold text-nd-text-primary flex items-center">
                                         <i class="ph-bold ph-gear-six mr-2 text-nd-accent"></i> Style Settings
                                     </h3>
-                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    
+                                    <!-- Row 1: Tone and Reader (Grid) -->
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         <div>
                                             <label for="target-tone" class="text-sm font-medium text-nd-text-secondary mb-2 block">Tone</label>
                                             <select id="target-tone" class="nd-select w-full">
@@ -342,16 +344,18 @@
                                                 <option value="general_public">General Person</option>
                                             </select>
                                         </div>
-                                        <div>
-                                            <label for="focus-point" class="text-sm font-medium text-nd-text-secondary mb-2 block">Main Idea (Optional)</label>
-                                            <input type="text" id="focus-point" class="nd-input w-full" placeholder="e.g., focus on money">
-                                        </div>
+                                    </div>
+
+                                    <!-- Row 2: Main Idea (Full Width, Fixed Position) -->
+                                    <div class="pt-2">
+                                        <label for="focus-point" class="text-sm font-medium text-nd-text-secondary mb-2 block">Main Idea (Optional)</label>
+                                        <input type="text" id="focus-point" class="nd-input w-full" placeholder="e.g., focus on money">
                                     </div>
                                 </div>
 
                                 <button id="humanize-btn" class="btn-primary w-full" onclick="humanizeText()">
                                     <div id="humanize-loader" class="loader hidden"></div>
-                                    <span> Humanize Text</span>
+                                    <span>REMOVE ALL GRAMMAR AND FIX TEXT</span>
                                 </button>
                             </div>
 
@@ -437,7 +441,6 @@
             const apiKey = "AIzaSyDM6f14Y9qq_wBxBbzSryVyfJ-vuG9YoMw"; 
             
             // Define the direct Gemini endpoint URL. We removed the unreliable cors.sh proxy.
-            // The Canvas environment should handle CORS for this direct endpoint.
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
             const payload = {
@@ -610,7 +613,7 @@
                 btn.disabled = false;
                 loader.classList.add('hidden');
                 btn.classList.remove('flex', 'items-center', 'justify-center');
-                btn.querySelector('span').textContent = 'REMOVE ALL GRAMMAR AND FIX TEXT';
+                btn.querySelector('span').textContent = 'Humanize Text ';
             }
         }
         
