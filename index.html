@@ -8,7 +8,7 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Inter Font (Vercel default) -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght300;400;600;700;800&display=swap" rel="stylesheet">
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
@@ -177,7 +177,7 @@
             color: var(--color-success) !important;
         }
 
-        /* --- View Transition Fix (Using display: none for true hiding) --- */
+        /* --- View Transition Fix --- */
         .page-view {
             display: none; 
             opacity: 0;
@@ -274,13 +274,13 @@
                 <div class="flex items-center space-x-3">
                     <!-- Ethereal Star Icon for Milky AI -->
                     <i class="ph-bold ph-star-four-points text-3xl" style="color: var(--color-accent);"></i>
-                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI </h1>
+                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI Humanize </h1>
                 </div>
             </header>
             
             <!-- Mobile-only Logo for Small Screens -->
             <header class="px-4 py-3 border-b border-nd-border mb-0 lg:hidden flex justify-center">
-                <i class="ph-bold ph-star-four-points text-2xl" style="color: var(--color-accent);" title="Milky AI Suite"></i>
+                <i class="ph-bold ph-star-four-points text-2xl" style="color: var(--color-accent);" title="Milky Humanize"></i>
             </header>
 
             <!-- Navigation Links -->
@@ -434,7 +434,13 @@
          */
         async function callGeminiApi(userQuery, systemPrompt, useSearch = true, maxRetries = 5) {
             const apiKey = ""; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            // --- CRITICAL FIX FOR GITHUB PAGES/CORS ---
+            // We encode the Gemini API URL and route it through a public CORS proxy.
+            const targetGeminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const proxyUrl = "https://corsproxy.io/?"; 
+            const apiUrl = proxyUrl + encodeURIComponent(targetGeminiUrl);
+            // ----------------------------------------
 
             const payload = {
                 contents: [{ parts: [{ text: userQuery }] }],
@@ -458,13 +464,12 @@
                     }
 
                     if (!response.ok) {
-                        const errorData = await response.json().catch(() => ({})); // Try to parse error body
+                        const errorData = await response.json().catch(() => ({})); 
                         const errorMessage = `API call failed: ${response.status} - ${response.statusText}. Server message: ${errorData.error?.message || 'Unknown server error'}`;
                         if (attempt === maxRetries - 1) {
                              console.error("Final API Error after retries:", errorMessage);
                              throw new Error(errorMessage);
                         }
-                        // For non-429 errors, we still retry (if possible) but log the issue
                         console.warn(`Attempt ${attempt + 1} failed: ${errorMessage}. Retrying...`);
                         const delay = Math.pow(2, attempt) * 1000 + Math.random() * 500;
                         await new Promise(resolve => setTimeout(resolve, delay));
@@ -490,20 +495,16 @@
                         
                         return { text, sources };
                     } else {
-                        // If response is OK but content is missing/malformed
                         throw new Error('Received an empty or malformed response from the LLM.');
                     }
                 } catch (error) {
-                    // Handle network errors (e.g., CORS, no internet)
                     if (attempt === maxRetries - 1) {
-                        console.error("Final Network/Fetch Error after retries:", error);
                         throw error;
                     }
                     const delay = Math.pow(2, attempt) * 1000 + Math.random() * 500;
                     await new Promise(resolve => setTimeout(resolve, delay));
                 }
             }
-            // Should not be reached if maxRetries > 0, but included for completeness
             throw new Error('API call failed after all retries due to unknown error.');
         }
 
@@ -515,7 +516,6 @@
             const copyBtn = document.getElementById('copy-btn');
             const copyIcon = document.getElementById('copy-icon');
             
-            // 1. Select the text content
             const range = document.createRange();
             range.selectNode(outputElement);
             window.getSelection().removeAllRanges();
@@ -523,34 +523,28 @@
 
             let success = false;
             try {
-                // 2. Execute the copy command
                 success = document.execCommand('copy');
             } catch (err) {
                 console.error('Could not copy text', err);
             }
             
-            // 3. Clean up selection
             window.getSelection().removeAllRanges();
 
-            // 4. Visual Feedback (non-alert)
             if (success) {
-                // Change icon to checkmark and color
                 copyIcon.classList.remove('ph-copy');
                 copyIcon.classList.add('ph-check-circle');
                 copyBtn.title = "Text copied";
 
                 setTimeout(() => {
-                    // Revert icon and color
                     copyIcon.classList.remove('ph-check-circle');
                     copyIcon.classList.add('ph-copy');
                     copyBtn.title = "Copy fixed text";
-                }, 2000); // 2 seconds delay for feedback
+                }, 2000); 
             } else {
-                // Fallback message in the output area
                 const originalText = outputElement.textContent;
                 outputElement.textContent = "Could not copy text please select it yourself and then press copy";
                 setTimeout(() => {
-                    outputElement.textContent = originalText; // Revert content
+                    outputElement.textContent = originalText; 
                 }, 3000);
             }
         }
@@ -583,7 +577,6 @@
             citationsContainer.innerHTML = '';
             sourcesLabel.classList.add('hidden');
 
-            // --- CRITICAL CONSTRAINT: EXTREME Simplicity and Punctuation Control (Updated for MAX restriction) ---
             const constraint = "CRITICAL INSTRUCTIONS: You MUST use the simplest possible English words. Only use vocabulary suitable for a 4th-grade reading level. You must use only the most basic, short, and 'easy to understand English' words possible; use the absolute simplest vocabulary. DO NOT use complex grammar formal phrasing or academic structures. You must use COMPLETELY NEW PHRASING and vocabulary to paraphrase the content. Punctuation must be simple; strictly avoid periods (.), em dashes, ellipses, question marks (?), and semicolons (;). CRITICAL RULE: The ENTIRE generated text body must contain NO PERIODS (.).";
 
             const systemPrompt = `You are a text fixer; your job is to change the writing so it sounds very fluent natural and like a person wrote it taking out any robotic parts.
@@ -610,8 +603,9 @@
 
             } catch (error) {
                 // Friendly error message for the user
-                output.textContent = `Error: The tool is having trouble connecting to the AI fixer right now. This is usually temporary. Please wait a minute and try again.`;
+                output.textContent = `Error: The tool is having trouble connecting to the AI fixer right now. This is usually temporary. Please wait a minute and try again. (If this is on GitHub, it is likely a CORS issue, but we are using a proxy to try and fix it!)`;
                 citationsContainer.innerHTML = '';
+                console.error("The API request failed due to CORS or network issues:", error);
             } finally {
                 // Reset UI state
                 btn.disabled = false;
