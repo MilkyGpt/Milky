@@ -1,211 +1,736 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Milky • A+ Writing Help</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;900&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{
-      font-family:'Inter',sans-serif;
-      background:#0a0a0a;
-      color:#e0e0e0;
-      overflow:hidden;
-    }
-    body::before{
-      content:"";
-      position:absolute;
-      inset:0;
-      background:radial-gradient(circle at 20% 80%,rgba(40,40,70,0.08),transparent 50%),
-              radial-gradient(circle at 80% 20%,rgba(30,50,80,0.06),transparent 50%);
-      z-index:-1;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milky AI Humanizer </title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font (Vercel default) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
 
-    /* Updated wrapper for 70% scale */
-    #wrapper {
-      display: flex;
-      height: 100vh;
-      /* --- Changed to 0.7 for 70% scale --- */
-      transform: scale(0.7); 
-      transform-origin: top left;
-      /* --- Changed to 142.86vw (100 / 0.7) --- */
-      width: 142.86vw; 
-      /* --- Changed to 142.86vh (100 / 0.7) --- */
-      height: 142.86vh; 
-    }
+    <style>
+        /* --- Root Variables and Global Styles (NextDev Dark Theme) --- */
+        :root {
+            --color-bg: #030006; /* Ultra Deep Black */
+            --color-card: #0F0F1A; /* Darker card background */
+            --color-input: #1C1C29; /* Integrated input color */
+            --color-border: #33334A; /* Subtle blue/purple border */
+            --color-accent: #C77DFF; /* Lighter Primary Purple */
+            --color-accent-dark: #A855F7; 
+            --color-text-primary: #ECECEC; 
+            --color-text-secondary: #B0B0C4; 
+            --color-success: #34D399; /* Tailwind Green 400 */
+        }
 
+        /* Tailwind config */
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'nd-bg': 'var(--color-bg)',
+                        'nd-card': 'var(--color-card)',
+                        'nd-input': 'var(--color-input)',
+                        'nd-border': 'var(--color-border)',
+                        'nd-text-primary': 'var(--color-text-primary)',
+                        'nd-text-secondary': 'var(--color-text-secondary)',
+                        'nd-accent': 'var(--color-accent)',
+                        'nd-success': 'var(--color-success)',
+                    },
+                    fontFamily: {
+                        sans: [ 'Inter', 'sans-serif' ],
+                    },
+                }
+            }
+        }
+        
+        * { transition: all 0.3s ease-in-out; }
 
-    aside{
-      width:300px;
-      background:rgba(12,12,18,0.98);
-      backdrop-filter:blur(20px);
-      border-right:1px solid rgba(255,255,255,0.06);
-      padding:3rem 2rem;
-    }
-    .logo h1{
-      font-size:4.2rem;
-      font-weight:900;
-      text-align:center;
-      color:#fff;
-      letter-spacing:-2px;
-    }
-    nav a{
-      display:flex;
-      align-items:center;
-      gap:1rem;
-      padding:1.1rem 1.4rem;
-      margin:0.5rem 0;
-      border-radius:12px;
-      font-weight:500;
-      color:#aaa;
-      transition:all .3s;
-    }
-    nav a:hover{background:rgba(255,255,255,0.1);color:#fff}
-    nav a.active{
-      background:rgba(255,255,255,0.15);
-      color:#fff;
-      font-weight:600;
-    }
-    nav a.active i{
-      font-size:1.4rem;
-      font-weight:900;
-    }
+        body {
+            font-family: var(--font-inter);
+            background-color: var(--color-bg);
+            color: var(--color-text-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
 
-    main{
-      flex:1;
-      padding:3rem 4rem;
-      overflow-y:auto;
-    }
-    .header{
-      font-size:3rem;
-      font-weight:700;
-      color:#fff;
-      margin-bottom:2.5rem;
-    }
-    .glass{
-      background:rgba(25,25,35,0.75);
-      backdrop-filter:blur(16px);
-      border:1px solid rgba(255,255,255,0.1);
-      border-radius:16px;
-      padding:2.5rem;
-    }
-    .hero h1{font-size:5.5rem;font-weight:900;line-height:1.1;color:#fff;margin-bottom:1rem}
-    .hero p{font-size:1.6rem;color:#bbb;margin-bottom:3rem;max-width:800px}
-    .stats{display:flex;gap:3rem;margin:3rem 0;flex-wrap:wrap}
-    .stat-num{font-size:3.5rem;font-weight:900;color:#fff}
-    .stat-label{font-size:1.1rem;color:#999}
+        /* --- Live Background (Particle Refinement) --- */
+        #particle-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.15; 
+        }
+        
+        /* --- Sidebar Navigation Styling --- */
+        #sidebar {
+            width: 280px; /* Slightly wider sidebar */
+            background-color: #0C0C15; /* Integrated dark shade */
+            border-right: 1px solid var(--color-border);
+            min-height: 100vh;
+            padding: 1rem 0;
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.4);
+        }
 
-    .contact-form input,
-    .contact-form textarea{
-      width:100%;
-      padding:1.2rem 1.6rem;
-      margin:1rem 0;
-      background:rgba(40,40,55,0.7);
-      border:1px solid rgba(255,255,255,0.15);
-      border-radius:12px;
-      color:#fff;
-      font-size:1.1rem;
-    }
-    .contact-form input:focus,
-    .contact-form textarea:focus{
-      outline:none;
-      border-color:#999;
-      background:rgba(50,50,70,0.8);
-    }
-    .contact-form button{
-      width:100%;
-      padding:1.4rem;
-      background:#fff;
-      color:#000;
-      font-weight:700;
-      font-size:1.3rem;
-      border:none;
-      border-radius:12px;
-      cursor:pointer;
-      margin-top:1.5rem;
-    }
-    .contact-form button:hover{background:#eee}
+        .nav-link {
+            padding: 1rem 1.75rem;
+            color: var(--color-text-secondary);
+            font-weight: 500;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            display: flex; /* Ensure flex for mobile display */
+            align-items: center;
+        }
+        .nav-link:hover {
+            color: var(--color-text-primary);
+            background-color: rgba(199, 125, 255, 0.05); /* Light hover effect */
+        }
+        .nav-link.active {
+            color: var(--color-text-primary);
+            background-color: var(--color-card);
+            border-left-color: var(--color-accent);
+            box-shadow: inset 5px 0 10px rgba(199, 125, 255, 0.1); /* Subtle inner shadow */
+        }
+        .nav-link i {
+            margin-right: 0.75rem;
+            font-size: 1.35rem;
+            opacity: 0.8;
+        }
+        .nav-link.active i {
+            opacity: 1;
+        }
+        
+        /* --- UI Components --- */
+        
+        /* Input/Textarea Glow */
+        .nd-input, .nd-textarea, .nd-select {
+            background-color: var(--color-input);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-primary);
+            padding: 1.1rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .nd-input:focus, .nd-textarea:focus, .nd-select:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 3px rgba(199, 125, 255, 0.4); 
+        }
+        
+        /* Custom box for output */
+        #humanizer-output-box {
+            background-color: var(--color-input); 
+            border: 1px solid var(--color-border);
+            padding: 1.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            min-height: 20rem; /* Ensure minimum height for balanced look */
+        }
 
-    .hidden{display:none}
-  </style>
+        /* Primary Button - Enhanced Gradient and Hover */
+        .btn-primary {
+            padding: 1rem 2rem;
+            font-weight: 700;
+            border-radius: 0.75rem;
+            color: var(--color-bg); 
+            
+            background-image: linear-gradient(135deg, var(--color-accent), var(--color-accent-dark)); 
+            box-shadow: 0 6px 20px rgba(199, 125, 255, 0.3);
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+        .btn-primary:hover {
+            background-image: linear-gradient(135deg, var(--color-accent-dark), var(--color-accent)); 
+            transform: translateY(-2px) scale(1.01);
+            box-shadow: 0 8px 25px rgba(199, 125, 255, 0.5);
+        }
+        .btn-primary:disabled {
+            background-image: none;
+            background-color: var(--color-input);
+            color: var(--color-text-secondary);
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Copy Button Styling */
+        #copy-btn {
+            background-color: var(--color-input);
+            border: 1px solid var(--color-border);
+            color: var(--color-text-secondary);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+        #copy-btn:hover {
+            background-color: var(--color-border);
+            color: var(--color-text-primary);
+        }
+        
+        /* Success state for copy icon */
+        .ph-check-circle {
+            color: var(--color-success) !important;
+        }
+
+        /* Page Transitions (Ensuring smooth movement) */
+        .page-view {
+            opacity: 0;
+            transform: translateY(15px); 
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out; 
+            position: absolute; 
+            width: 100%; 
+            pointer-events: none; 
+        }
+        
+        .page-view.visible {
+            opacity: 1;
+            transform: translateY(0); 
+            position: relative; 
+            pointer-events: auto;
+        }
+
+        /* Loader Style */
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.4);
+            border-top: 3px solid var(--color-bg); /* Use background color for contrast */
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+        }
+        
+        /* Responsive adjustments for mobile */
+        @media (max-width: 1024px) {
+            #sidebar {
+                width: 100%;
+                min-height: auto;
+                border-right: none;
+                border-bottom: 1px solid var(--color-border);
+                padding: 0; /* Remove vertical padding from sidebar */
+            }
+            .app-layout {
+                flex-direction: column;
+            }
+            .content-area {
+                padding: 1rem;
+            }
+            .nav-link {
+                padding: 0.75rem 1rem;
+                border-left: none;
+                border-bottom: 3px solid transparent;
+                justify-content: center; /* Center links in mobile nav */
+            }
+            .nav-link span {
+                display: none; /* Hide text, only show icons for space saving */
+            }
+            .nav-link i {
+                margin-right: 0;
+            }
+            .nav-link.active {
+                border-left-color: transparent;
+                border-bottom-color: var(--color-accent);
+                box-shadow: inset 0 -5px 10px rgba(199, 125, 255, 0.1);
+            }
+            
+            /* Mobile adjustment for copy button visibility */
+            #copy-btn {
+                top: 0.75rem;
+                right: 0.75rem;
+                padding: 0.5rem; /* Smaller padding on mobile */
+            }
+
+            /* Adjust header spacing on mobile */
+            .content-area header {
+                margin-bottom: 1rem;
+            }
+            .content-area header h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<div id="wrapper">
-  <aside>
-    <div class="logo"><h1>Milky</h1></div>
-    <nav>
-      <a href="#" data-tab="home" class="active">
-        <i class="ph-bold ph-house"></i> Home
-      </a>
-      <a href="#" data-tab="services">
-        <i class="ph-bold ph-book-open"></i> Services
-      </a>
-      <a href="#" data-tab="contact">
-        <i class="ph-bold ph-chat-circle-dots"></i> Contact Me
-      </a>
-    </nav>
-  </aside>
+    <!-- 1. Live Particle Background -->
+    <canvas id="particle-canvas"></canvas>
 
-  <main>
-    <div id="home" class="tab-content">
-      <div class="header">Welcome To Milky!</div>
-      <div class="glass hero">
-        <h1>A+ Writing Help<br>Delivered Fast</h1>
-        <p style="font-size:1.6rem;color:#bbb;">Essays, history, creative writing, editing — 100% original, discreet, A+ guaranteed.</p>
+    <!-- 2. Main Application Layout -->
+    <div class="app-layout">
         
-        <div class="stats">
-          <div class="stat"><div class="stat-num">1200+</div><div class="stat-label">Assignments</div></div>
-          <div class="stat"><div class="stat-num">4.98★</div><div class="stat-label">Rating</div></div>
-          <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Online</div></div>
-        </div>
-      </div>
+        <!-- Sidebar Navigation -->
+        <nav id="sidebar">
+            <!-- App Logo/Header (Improved Icon) -->
+            <header class="px-7 pb-8 pt-4 border-b border-nd-border mb-4 hidden lg:block">
+                <div class="flex items-center space-x-3">
+                    <!-- Ethereal Star Icon for Milky AI -->
+                    <i class="ph-bold ph-star-four-points text-3xl" style="color: var(--color-accent);"></i>
+                    <h1 class="text-xl font-extrabold tracking-wide text-nd-text-primary">Milky AI Suite</h1>
+                </div>
+            </header>
+            
+            <!-- Mobile-only Logo for Small Screens -->
+            <header class="px-4 py-3 border-b border-nd-border mb-0 lg:hidden flex justify-center">
+                <i class="ph-bold ph-star-four-points text-2xl" style="color: var(--color-accent);" title="Milky AI Suite"></i>
+            </header>
+
+            <!-- Navigation Links -->
+            <div class="space-y-1 lg:block flex overflow-x-auto justify-center">
+                <a href="#" class="nav-link active" data-view="humanizer">
+                    <i class="ph-bold ph-magic-wand"></i>
+                    <span>Grammar Removal Tool</span>
+                </a>
+                <a href="#" class="nav-link" data-view="terms">
+                    <i class="ph-bold ph-infinity"></i>
+                    <span>About This Tool</span>
+                </a>
+            </div>
+        </nav>
+
+        <!-- Main Content Area -->
+        <main class="content-area">
+            <!-- Max width wrapper for better UX on large monitors -->
+            <div class="w-full max-w-6xl">
+                <header class="mb-12">
+                    <h2 class="text-4xl font-extrabold text-nd-text-primary">AI Bypass Dashboard</h2>
+                    <p class="text-lg text-nd-text-secondary mt-2">The fastest way to make robotic text sound human, with absolutely no complex grammar.</p>
+                </header>
+
+                <!-- Content Container for Views -->
+                <div class="relative min-h-[500px]">
+
+                    <!-- AI Humanizer View (Core Tool) -->
+                    <section id="view-humanizer" class="page-view" style="opacity: 1; transform: translateY(0); position: relative; pointer-events: auto;">
+                        
+                        <h3 class="text-2xl font-semibold mb-6 text-nd-text-primary flex items-center">
+                            <i class="ph-bold ph-pencil-simple text-nd-accent mr-2"></i> Fix My Text
+                        </h3>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <!-- Column 1: Input and Controls -->
+                            <div class="space-y-6">
+                                <textarea id="humanizer-input" class="nd-textarea w-full h-80 resize-none" placeholder="Paste your robotic text here it needs to be fixed..."></textarea>
+                                
+                                <!-- Control Panel (Sleek Card Design) -->
+                                <div class="p-6 bg-nd-card rounded-xl border border-nd-border space-y-5 shadow-2xl">
+                                    <h3 class="text-xl font-semibold text-nd-text-primary flex items-center">
+                                        <i class="ph-bold ph-gear-six mr-2 text-nd-accent"></i> Style Settings
+                                    </h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        <div>
+                                            <label for="target-tone" class="text-sm font-medium text-nd-text-secondary mb-2 block">Tone</label>
+                                            <select id="target-tone" class="nd-select w-full">
+                                                <option value="academic">School/Formal</option>
+                                                <option value="casual">Friendly/Simple</option>
+                                                <option value="critical">Smart/Tough</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label for="target-audience" class="text-sm font-medium text-nd-text-secondary mb-2 block">Reader</label>
+                                            <select id="target-audience" class="nd-select w-full">
+                                                <option value="university_level">College</option>
+                                                <option value="high_school">High School</option>
+                                                <option value="general_public">General Person</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label for="focus-point" class="text-sm font-medium text-nd-text-secondary mb-2 block">Main Idea (Optional)</label>
+                                            <input type="text" id="focus-point" class="nd-input w-full" placeholder="e.g., focus on money">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <button id="humanize-btn" class="btn-primary w-full" onclick="humanizeText()">
+                                    <div id="humanize-loader" class="loader hidden"></div>
+                                    <span>REMOVE ALL GRAMMAR AND FIX TEXT</span>
+                                </button>
+                            </div>
+
+                            <!-- Column 2: Output and Sources -->
+                            <div class="space-y-6">
+                                
+                                <!-- Output Box Wrapper (Relative positioning for Copy Button) -->
+                                <div id="humanizer-output-box-wrapper" class="relative w-full h-80">
+                                    
+                                    <!-- The Copy Button (Absolute position) -->
+                                    <button id="copy-btn" class="absolute top-3 right-3 p-2 rounded-lg bg-nd-input hover:bg-nd-border text-nd-text-secondary transition-colors duration-300 z-10" onclick="copyText()" title="Copy fixed text">
+                                        <i id="copy-icon" class="ph-bold ph-copy text-xl"></i>
+                                    </button>
+                                    
+                                    <div id="humanizer-output-box" class="w-full h-full overflow-y-auto">
+                                        <!-- Placeholder Text -->
+                                        <p id="humanizer-output" class="text-nd-text-secondary leading-relaxed">The fixed writing will show up here it uses simple words and no periods or hard grammar so it looks very real.</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Citations Card -->
+                                <div id="citations-card" class="p-4 bg-nd-card rounded-xl border border-nd-border">
+                                    <p id="humanizer-sources-label" class="text-sm font-semibold text-nd-text-secondary mb-3 hidden flex items-center">
+                                        <i class="ph-bold ph-globe text-nd-accent mr-2"></i> Websites Used For Facts:
+                                    </p>
+                                    <div id="humanizer-citations" class="flex flex-wrap"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                    <!-- Terms & Info View -->
+                    <section id="view-terms" class="page-view hidden">
+                        <h3 class="text-3xl font-bold mb-8 text-nd-text-primary flex items-center">
+                            <i class="ph-bold ph-book-open text-nd-accent mr-3"></i> Information Center
+                        </h3>
+                        
+                        <div class="max-w-4xl space-y-6">
+                            
+                            <!-- Rule Card 1 -->
+                            <div class="p-6 bg-nd-card rounded-xl border border-nd-border shadow-xl space-y-4 flex items-start">
+                                <i class="ph-bold ph-monitor-play text-4xl mr-4 text-nd-accent-dark"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold text-nd-text-primary">Tool Purpose</h3>
+                                    <p class="text-nd-text-secondary">This tool takes your writing and makes it sound less like a computer wrote it which helps your paper seem more human and less robotic.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Rule Card 2 -->
+                            <div class="p-6 bg-nd-card rounded-xl border border-nd-border shadow-xl space-y-4 flex items-start">
+                                 <i class="ph-bold ph-seal-check text-4xl mr-4 text-nd-accent-dark"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold text-nd-text-primary">The Grammar Promise</h3>
+                                    <p class="text-nd-text-secondary">We use the strictest rules to ensure the text comes out only in simple easy words there will be no complicated grammar rules followed or any periods at the end of sentences that is a strict rule of this app.</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Rule Card 3 -->
+                            <div class="p-6 bg-nd-card rounded-xl border border-nd-border shadow-xl space-y-4 flex items-start">
+                                <i class="ph-bold ph-keyhole text-4xl mr-4 text-nd-accent-dark"></i>
+                                <div>
+                                    <h3 class="text-xl font-bold text-nd-text-primary">Data Privacy Note</h3>
+                                    <p class="text-nd-text-secondary">Your text is sent to the AI system to be rewritten but we never save or store your writing anywhere on our servers after the fix is done.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    
+                </div>
+            </div>
+        </main>
     </div>
 
-    <div id="services" class="tab-content hidden">
-      <div class="header">Services</div>
-      <div class="glass">
-        <ul style="font-size:1.3rem;line-height:2.4;color:#ddd;">
-          <li>Essays & Research Papers</li>
-          <li>History Assignments</li>
-          <li>Creative Writing</li>
-          <li>Editing & Proofreading</li>
-        </ul>
-      </div>
-    </div>
 
-    <div id="contact" class="tab-content hidden">
-      <div class="header">Contact Me</div>
-      <div class="glass">
-        <p style="margin-bottom:2rem;color:#ccc;font-size:1.2rem;">
-          I reply in minutes - fastest on socials. I’ll add you back instantly.
-        </p>
-        <form class="contact-form" action="https://formspree.io/f/xkgqajpr" method="POST">
-          <input type="text" name="name" placeholder="Your Name — REQUIRED " required>
-          <input type="email" name="email" placeholder="Your Email — REQUIRED " required>
-          <input type="text" name="social" placeholder="Social (Insta/Discord/Snap) — REQUIRED" required>
-          <input type="text" name="topic" placeholder="Assignment Topic — REQUIRED " required>
-          <textarea name="message" rows="6" placeholder="Deadline, word count, instructions... — REQUIRED " required></textarea>
-          <button type="submit">Send Email </button>
-        </form>
-      </div>
-    </div>
-  </main>
-</div>
+    <script>
+        // --- 1. Utility Functions ---
+        
+        /**
+         * Generic function to call the Gemini API with exponential backoff.
+         */
+        async function callGeminiApi(userQuery, systemPrompt, useSearch = true, maxRetries = 5) {
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
-<script>
-  document.querySelectorAll('nav a').forEach(a => {
-    a.onclick = e => {
-      e.preventDefault();
-      document.querySelectorAll('nav a').forEach(x => x.classList.remove('active'));
-      a.classList.add('active');
-      document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-      document.getElementById(a.dataset.tab).classList.remove('hidden');
-    }
-  });
-</script>
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: useSearch ? [{ "google_search": {} }] : [],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+            };
+
+            for (let attempt = 0; attempt < maxRetries; attempt++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.status === 429 && attempt < maxRetries - 1) {
+                        const delay = Math.pow(2, attempt) * 1000 + Math.random() * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        continue; 
+                    }
+
+                    if (!response.ok) {
+                        const errorData = await response.json();
+                        throw new Error(`API call failed: ${response.status} - ${response.statusText} (${errorData.error?.message || 'Unknown error'})`);
+                    }
+
+                    const result = await response.json();
+                    const candidate = result.candidates?.[0];
+
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        const text = candidate.content.parts[0].text;
+                        
+                        let sources = [];
+                        const groundingMetadata = candidate.groundingMetadata;
+                        if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                            sources = groundingMetadata.groundingAttributions
+                                .map(attribution => ({
+                                    uri: attribution.web?.uri,
+                                    title: attribution.web?.title,
+                                }))
+                                .filter(source => source.uri && source.title);
+                        }
+                        
+                        return { text, sources };
+                    } else {
+                        throw new Error('Received an empty or malformed response from the LLM.');
+                    }
+                } catch (error) {
+                    if (attempt === maxRetries - 1) {
+                        throw error;
+                    }
+                }
+            }
+        }
+
+        /**
+         * Handles copying the output text to the clipboard.
+         */
+        function copyText() {
+            const outputElement = document.getElementById('humanizer-output');
+            const copyBtn = document.getElementById('copy-btn');
+            const copyIcon = document.getElementById('copy-icon');
+            
+            // 1. Select the text content
+            const range = document.createRange();
+            range.selectNode(outputElement);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+
+            let success = false;
+            try {
+                // 2. Execute the copy command
+                success = document.execCommand('copy');
+            } catch (err) {
+                console.error('Could not copy text', err);
+            }
+            
+            // 3. Clean up selection
+            window.getSelection().removeAllRanges();
+
+            // 4. Visual Feedback (non-alert)
+            if (success) {
+                // Change icon to checkmark and color
+                copyIcon.classList.remove('ph-copy');
+                copyIcon.classList.add('ph-check-circle');
+                copyBtn.title = "Text copied";
+
+                setTimeout(() => {
+                    // Revert icon and color
+                    copyIcon.classList.remove('ph-check-circle');
+                    copyIcon.classList.add('ph-copy');
+                    copyBtn.title = "Copy fixed text";
+                }, 2000); // 2 seconds delay for feedback
+            } else {
+                // Fallback message in the output area
+                const originalText = outputElement.textContent;
+                outputElement.textContent = "Could not copy text please select it yourself and then press copy";
+                setTimeout(() => {
+                    outputElement.textContent = originalText; // Revert content
+                }, 3000);
+            }
+        }
+
+
+        // --- 2. AI Humanizer Logic (Gemini API) ---
+        async function humanizeText() {
+            const input = document.getElementById('humanizer-input').value.trim();
+            const tone = document.getElementById('target-tone').value;
+            const audience = document.getElementById('target-audience').value;
+            const focus = document.getElementById('focus-point').value.trim();
+            
+            const btn = document.getElementById('humanize-btn');
+            const loader = document.getElementById('humanize-loader');
+            const output = document.getElementById('humanizer-output');
+            const citationsContainer = document.getElementById('humanizer-citations');
+            const sourcesLabel = document.getElementById('humanizer-sources-label');
+
+            if (!input) {
+                output.textContent = "You need to put some text here first.";
+                return;
+            }
+            
+            // Set UI to loading state
+            btn.disabled = true;
+            loader.classList.remove('hidden');
+            btn.classList.add('flex', 'items-center', 'justify-center');
+            btn.querySelector('span').textContent = 'Processing...';
+            output.textContent = 'Fixing the writing now...';
+            citationsContainer.innerHTML = '';
+            sourcesLabel.classList.add('hidden');
+
+            // --- CRITICAL CONSTRAINT: EXTREME Simplicity and Punctuation Control (Updated for MAX restriction) ---
+            const constraint = "CRITICAL INSTRUCTIONS: You MUST use the simplest possible English words. Only use vocabulary suitable for a 4th-grade reading level. You must use only the most basic, short, and 'easy to understand English' words possible; use the absolute simplest vocabulary. DO NOT use complex grammar formal phrasing or academic structures. You must use COMPLETELY NEW PHRASING and vocabulary to paraphrase the content. Punctuation must be simple; strictly avoid periods (.), em dashes, ellipses, question marks (?), and semicolons (;). CRITICAL RULE: The ENTIRE generated text body must contain NO PERIODS (.).";
+
+            const systemPrompt = `You are a text fixer; your job is to change the writing so it sounds very fluent natural and like a person wrote it taking out any robotic parts.
+            Target Tone: ${tone}. Target Audience: ${audience}. Main Idea: ${focus || 'Keep the main facts correct.'} Use simple words and structures only. ${constraint} Only give the changed text, nothing else.`;
+            
+            const userQuery = `Fix and humanize this text: \n\n${input}`;
+
+            try {
+                const { text, sources } = await callGeminiApi(userQuery, systemPrompt, true);
+                
+                // Final guarantee in JavaScript: remove ANY period, ensuring the ultimate compliance
+                const finalCleanText = text.replace(/\./g, '');
+
+                output.textContent = finalCleanText;
+                
+                if (sources.length > 0) {
+                    sourcesLabel.classList.remove('hidden');
+                    citationsContainer.innerHTML = sources.map((s, index) => 
+                        `<a href="${s.uri}" target="_blank" class="citation-item" title="${s.title}">[Source ${index + 1}]</a>`
+                    ).join('');
+                } else {
+                    sourcesLabel.classList.add('hidden');
+                }
+
+            } catch (error) {
+                console.error("Gemini API Error:", error);
+                output.textContent = `Error: I could not fix the text the tool failed to run because of a network problem or the API is busy`;
+                citationsContainer.innerHTML = '';
+            } finally {
+                // Reset UI state
+                btn.disabled = false;
+                loader.classList.add('hidden');
+                btn.classList.remove('flex', 'items-center', 'justify-center');
+                btn.querySelector('span').textContent = 'REMOVE ALL GRAMMAR AND FIX TEXT';
+            }
+        }
+        
+        // --- 3. Particle Animation (Live Background) ---
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        const PARTICLE_COLOR = 'rgba(255, 255, 255, 0.9)'; 
+        const CONNECTION_COLOR = 'rgba(199, 125, 255, 0.2)'; // Faint purple connection
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            // Recalculate maxDistance based on the smaller dimension or device type
+            particles.forEach(p => p.maxDistance = Math.min(canvas.width, canvas.height) / (window.innerWidth < 1024 ? 4.5 : 5.5));
+        }
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 1.5 + 0.5; 
+                this.speedX = Math.random() * 0.4 - 0.2; // Slower, subtle movement
+                this.speedY = Math.random() * 0.4 - 0.2;
+                this.maxDistance = Math.min(canvas.width, canvas.height) / (window.innerWidth < 1024 ? 4.5 : 5.5);
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.x > canvas.width || this.x < 0) this.x = (this.x > canvas.width) ? 0 : canvas.width;
+                if (this.y > canvas.height || this.y < 0) this.y = (this.y > canvas.height) ? 0 : canvas.height;
+            }
+            draw() {
+                ctx.fillStyle = PARTICLE_COLOR; 
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function createParticles() {
+            particles = [];
+            const particleCount = Math.floor((canvas.width * canvas.height) / (window.innerWidth < 1024 ? 40000 : 30000)); // Fewer particles on small screen
+            for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+        }
+
+        function connectParticles() {
+            for (let a = 0; a < particles.length; a++) {
+                for (let b = a; b < particles.length; b++) {
+                    const distance = Math.sqrt((particles[a].x - particles[b].x) ** 2 + (particles[a].y - particles[b].y) ** 2);
+                    if (distance < particles[a].maxDistance) {
+                        let opacity = 1 - (distance / particles[a].maxDistance);
+                        ctx.strokeStyle = `rgba(199, 125, 255, ${opacity * 0.15})`; // Fainter, purpler lines
+                        ctx.lineWidth = 0.5; 
+                        ctx.beginPath();
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) { particles[i].update(); particles[i].draw(); }
+            connectParticles();
+            requestAnimationFrame(animateParticles);
+        }
+        
+        // --- 4. Sidebar Navigation Logic ---
+        const navLinks = document.querySelectorAll('.nav-link');
+        let currentViewId = 'view-humanizer';
+
+        navLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const nextViewId = `view-${link.getAttribute('data-view')}`;
+                
+                if (nextViewId === currentViewId) return;
+                
+                // 1. Update active nav link styling
+                navLinks.forEach(nav => nav.classList.remove('active'));
+                link.classList.add('active');
+                
+                // 2. Handle view transitions
+                const currentView = document.getElementById(currentViewId);
+                const nextView = document.getElementById(nextViewId);
+                
+                if (currentView) {
+                    currentView.classList.remove('visible'); 
+                    // Use a delay equal to the CSS transition time (0.6s) before hiding
+                    setTimeout(() => { currentView.classList.add('hidden'); }, 600); 
+                }
+                if (nextView) {
+                    nextView.classList.remove('hidden'); 
+                    // Use requestAnimationFrame for smooth starting of the transition
+                    requestAnimationFrame(() => { nextView.classList.add('visible'); });
+                }
+                
+                // 3. Update Dashboard header based on new view
+                const dashboardTitle = document.querySelector('.content-area header h2');
+                const dashboardSubtitle = document.querySelector('.content-area header p');
+                
+                if (nextViewId === 'view-terms') {
+                    dashboardTitle.textContent = 'Information Center';
+                    dashboardSubtitle.textContent = 'Important rules and notices for using this tool.';
+                } else {
+                    dashboardTitle.textContent = 'AI Bypass Dashboard';
+                    dashboardSubtitle.textContent = 'The fastest way to make robotic text sound human, with absolutely no complex grammar.';
+                }
+
+                currentViewId = nextViewId;
+            });
+        });
+
+        // --- 5. Initialization ---
+        function initializeApp() {
+            // Particle setup
+            resizeCanvas();
+            createParticles();
+            animateParticles();
+            window.addEventListener('resize', () => { 
+                resizeCanvas(); 
+                createParticles();
+            });
+            
+            // Set initial view visibility
+            const initialView = document.getElementById(currentViewId);
+            if (initialView) {
+                initialView.classList.remove('hidden');
+                requestAnimationFrame(() => { initialView.classList.add('visible'); });
+            }
+        }
+
+        window.onload = initializeApp;
+    </script>
 </body>
 </html>
